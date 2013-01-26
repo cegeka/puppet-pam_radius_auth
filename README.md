@@ -17,6 +17,8 @@ any system that supports PAM:
 
         auth [success=done new_authtok_reqd=done ignore=ignore default=die] pam_radius_auth.so localifdown
 
+This module has been tested on EL5 and EL6, as well as Ubuntu 12.04 LTS.
+
 
 ##Prerequisites:
 On CentOS, the EPEL repo must be installed and enabled. Information on
