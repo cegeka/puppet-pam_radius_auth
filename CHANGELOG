@@ -1,0 +1,11 @@
+Puppet rji/pam_radius_auth changelog
+Roger Ignazio, https://github.com/rji/puppet-modules
+
+Date        Version   Comment
+----------  --------  ---------------
+2013-01-25  0.2       Added support for EL 5.x, changed version scheme to
+                      major.minor.patch, which makes this release 0.2.
+                      Updated README to use Markdown syntax, and added this
+                      CHANGELOG.
+
+2012-07-07  0.0.1     Initial release, published to Puppet Forge
