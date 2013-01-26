@@ -1,6 +1,5 @@
 # This is the rji/pam_radius_auth module for Puppet.
 # Written by Roger Ignazio <rignazio at gmail dot com>
-# https://github.com/rji/puppet-modules/tree/master/pam_radius_auth
 #
 # Configuration:
 # $pam_radius_servers, $pam_radius_secret, and $pam_radius_timeout should
