@@ -26,7 +26,7 @@
 #  deciding that the server has failed to respond.
 #
 # server[:port]	shared_secret      timeout (s)
-<% pam_radius_servers.each do |pam_radius_server| -%>
-<%= pam_radius_server %>  <%= pam_radius_secret %>  <%= pam_radius_timeout %>
+<% @pam_radius_servers_real.each do |pam_radius_server| -%>
+<%= pam_radius_server %>  <%= @pam_radius_secret_real %>  <%= @pam_radius_timeout_real %>
 <% end -%>
 

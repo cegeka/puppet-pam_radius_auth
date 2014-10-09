@@ -11,24 +11,30 @@
 # with slight modification (eg. putting the pam_radius_auth config in your
 # system's relevant PAM file(s)). See GitHub or the README for more information.
 #
-class pam_radius_auth($pam_radius_servers = [ '192.168.10.8',
-                                              '192.168.10.9' ],
-                      $pam_radius_secret  = 'secret',
-                      $pam_radius_timeout = '3' )
-{
+class pam_radius_auth (
+  $pam_radius_servers = undef,
+  $pam_radius_secret  = undef,
+  $pam_radius_timeout = undef
+) {
+
+  include stdlib
+
+  $pam_radius_servers_real  = $pam_radius_servers
+  $pam_radius_secret_real   = $pam_radius_secret
+  $pam_radius_timeout_real  = $pam_radius_timeout
+
+  validate_array($pam_radius_servers_real)
+  validate_re($pam_radius_secret_real, '^[~+._0-9a-zA-Z:-]+$')
+  validate_re($pam_radius_timeout_real, '^[0-9]+$')
+
   # Distribution check
-  case $operatingsystem {
+  case $::operatingsystem {
     centos, redhat: {
       # Vars that apply to all Enterprise Linux releases
       $pkg  = 'pam_radius'
       $conf = '/etc/pam_radius.conf'
 
-      # The 'redhat-lsb' package is required to get the  major release number
-      package { 'redhat-lsb':
-        ensure => present,
-      }
-
-      case $lsbmajdistrelease {
+      case $::operatingsystemmajrelease {
         5: {
           $supported     = true
           $pam_sshd_conf = 'pam_sshd_el5'
@@ -41,7 +47,7 @@ class pam_radius_auth($pam_radius_servers = [ '192.168.10.8',
         }
         default: {
           $supported = false
-          notify { "pam_radius_auth module not supported on CentOS ${lsbmajdistrelease}":}
+          notify { "pam_radius_auth module not supported on operating system release: ${::operatingsystemmajrelease}":}
         }
       }
     }
@@ -56,7 +62,7 @@ class pam_radius_auth($pam_radius_servers = [ '192.168.10.8',
     }
     default: {
       $supported = false
-      notify { "pam_radius_auth module not supported on OS ${operatingsystem}":}
+      notify { "pam_radius_auth module not supported on OS ${::operatingsystem}":}
     }
   }
 
