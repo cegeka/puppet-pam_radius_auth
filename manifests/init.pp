@@ -19,7 +19,7 @@ class pam_radius_auth (
   $pam_radius_enforce       = 'permissive',
   $pam_radius_users_file    = 'pam_admin_users.conf',
   $pam_radius_admin_users   = [''],
-  $pam_radius_admins_group  = ['admins']
+  $pam_radius_admins_group  = 'admins'
 ) {
 
   include stdlib
