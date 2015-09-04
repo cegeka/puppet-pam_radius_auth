@@ -2,7 +2,15 @@
 # This file is managed by Puppet
 auth       required	pam_sepermit.so
 # pam_radius
+<%- if @pam_radius_enforce_real == 'strict'-%>
+# strict - don't allow failback to local password
 auth       [success=done new_authtok_reqd=done ignore=ignore default=die] pam_radius_auth.so localifdown
+<% end -%>
+<%- if @pam_radius_enforce_real == 'permissive'-%>
+# permissive - allow failback to local password
+auth       sufficient   pam_radius_auth.so localifdown
+auth       sufficient   pam_unix.so nullok use_first_pass
+<% end -%>
 auth       include      password-auth
 account    required     pam_nologin.so
 account    include      password-auth

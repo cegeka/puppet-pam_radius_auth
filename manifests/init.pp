@@ -14,7 +14,8 @@
 class pam_radius_auth (
   $pam_radius_servers = undef,
   $pam_radius_secret  = undef,
-  $pam_radius_timeout = undef
+  $pam_radius_timeout = undef,
+  $pam_radius_enforce = 'permissive'
 ) {
 
   include stdlib
@@ -22,10 +23,12 @@ class pam_radius_auth (
   $pam_radius_servers_real  = $pam_radius_servers
   $pam_radius_secret_real   = $pam_radius_secret
   $pam_radius_timeout_real  = $pam_radius_timeout
+  $pam_radius_enforce_real  = $pam_radius_enforce
 
   validate_array($pam_radius_servers_real)
   validate_re($pam_radius_secret_real, '^[~+._0-9a-zA-Z:-]+$')
   validate_re($pam_radius_timeout_real, '^[0-9]+$')
+  validate_re($pam_radius_enforce_real, '^permissive$|^strict$')
 
   # Distribution check
   case $::operatingsystem {
@@ -90,7 +93,7 @@ class pam_radius_auth (
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      source  => "puppet:///modules/pam_radius_auth/${pam_sshd_conf}",
+      content => template("pam_radius_auth/${pam_sshd_conf}"),
       require => [ Package[$pkg], File[$conf] ],
     }
 
@@ -99,7 +102,7 @@ class pam_radius_auth (
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      source  => "puppet:///modules/pam_radius_auth/${pam_sudo_conf}",
+      content => template("pam_radius_auth/pam_radius_auth/${pam_sudo_conf}"),
       require => [ Package[$pkg], File[$conf] ],
     }
   }
