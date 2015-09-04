@@ -4,7 +4,10 @@ auth       required   pam_env.so readenv=1 user_readenv=0
 auth       required   pam_env.so readenv=1 envfile=/etc/default/locale user_readenv=0
 <%- if @pam_radius_enforce_real == 'strict'-%>
 # strict - don't allow failback to local password
+auth       [success=1 default=ignore] pam_listfile.so onerr=success item=user sense=allow file=<%=@pam_radius_users_file%>
+auth       [success=2 default=ignore] pam_succeed_if.so user notingroup <%=@pam_radius_admins_group%> quiet
 auth       [success=done new_authtok_reqd=done ignore=ignore default=die] pam_radius_auth.so localifdown
+auth       sufficient   pam_unix.so nullok
 <% end -%>
 <%- if @pam_radius_enforce_real == 'permissive'-%>
 # permissive - allow failback to local password

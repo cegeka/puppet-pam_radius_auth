@@ -12,10 +12,14 @@
 # system's relevant PAM file(s)). See GitHub or the README for more information.
 #
 class pam_radius_auth (
-  $pam_radius_servers = undef,
-  $pam_radius_secret  = undef,
-  $pam_radius_timeout = undef,
-  $pam_radius_enforce = 'permissive'
+  $ensure                   = present,
+  $pam_radius_servers       = undef,
+  $pam_radius_secret        = undef,
+  $pam_radius_timeout       = undef,
+  $pam_radius_enforce       = 'permissive',
+  $pam_radius_users_file    = 'pam_admin_users.conf',
+  $pam_radius_admin_users   = [''],
+  $pam_radius_admins_group  = ['admins']
 ) {
 
   include stdlib
@@ -24,6 +28,8 @@ class pam_radius_auth (
   $pam_radius_secret_real   = $pam_radius_secret
   $pam_radius_timeout_real  = $pam_radius_timeout
   $pam_radius_enforce_real  = $pam_radius_enforce
+  $pam_radius_users_file_real = $pam_radius_users_file
+  $pam_radius_admins_group_real = $pam_radius_admins_group
 
   validate_array($pam_radius_servers_real)
   validate_re($pam_radius_secret_real, '^[~+._0-9a-zA-Z:-]+$')
@@ -75,11 +81,11 @@ class pam_radius_auth (
       # On Redhat/CentOS, pam_radius is in the EPEL repo
       # On Debian/Ubuntu, libpam-radius-auth is included in main
     package { $pkg:
-      ensure  => present,
+      ensure  => $ensure,
     }
 
     file { $conf:
-      ensure  => present,
+      ensure  => $ensure,
       owner   => 'root',
       group   => 'root',
       mode    => '0600',
@@ -93,7 +99,7 @@ class pam_radius_auth (
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      content => template("pam_radius_auth/${pam_sshd_conf}"),
+      content => template("pam_radius_auth/${pam_sshd_conf}.erb"),
       require => [ Package[$pkg], File[$conf] ],
     }
 
@@ -102,8 +108,18 @@ class pam_radius_auth (
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      content => template("pam_radius_auth/pam_radius_auth/${pam_sudo_conf}"),
+      content => template("pam_radius_auth/${pam_sudo_conf}.erb"),
       require => [ Package[$pkg], File[$conf] ],
     }
+
+    file { "/etc/${pam_radius_users_file_real}" :
+      ensure  => $ensure,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0640',
+      content => template('pam_radius_auth/pam_admin_users.erb'),
+      require => [ Package[$pkg], File[$conf] ],
+    }
+
   }
 }
