@@ -1,6 +1,0 @@
-rvm: 1.8.7
-notifications:
-  email:
-    - me@rogerignazio.com
-env:
-  - PUPPET_VERSION=2.7.20
