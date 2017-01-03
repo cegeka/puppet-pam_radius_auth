@@ -1,0 +1,27 @@
+#%PAM-1.0
+# This file is managed by Puppet
+auth       required	pam_sepermit.so
+# pam_radius
+<%- if @pam_radius_enforce_real == 'strict'-%>
+# strict - don't allow failback to local password
+auth       [success=1 default=ignore] pam_listfile.so onerr=success item=user sense=allow file=/etc/<%=@pam_radius_users_file%>
+auth       [success=2 default=ignore] pam_succeed_if.so user notingroup <%=@pam_radius_admins_group%> quiet
+auth       [success=done new_authtok_reqd=done ignore=ignore default=die] pam_radius_auth.so localifdown
+auth       sufficient   pam_unix.so nullok
+<% end -%>
+<%- if @pam_radius_enforce_real == 'permissive'-%>
+# permissive - allow failback to local password
+auth       sufficient   pam_radius_auth.so localifdown
+auth       sufficient   pam_unix.so nullok use_first_pass
+<% end -%>
+auth       include      password-auth
+account    required     pam_nologin.so
+account    include      password-auth
+password   include      password-auth
+# pam_selinux.so close should be the first session rule
+session    required     pam_selinux.so close
+session    required     pam_loginuid.so
+# pam_selinux.so open should only be followed by sessions to be executed in the user context
+session    required     pam_selinux.so open env_params
+session    optional     pam_keyinit.so force revoke
+session    include      password-auth
