@@ -1,5 +1,5 @@
 = puppet-pam_radius_auth module
 
-{<img src='https://codex.cegeka.be/jenkins/job/puppet-pam_radius_auth/badge/icon' />}[https://codex.cegeka.be/jenkins/job/puppet-pam_radius_auth/]
+{<img src='https://jenkins-iac.cegeka.be/job/puppet-pam_radius_auth/badge/icon' />}[https://jenkins-iac.cegeka.be/job/puppet-pam_radius_auth/]
 
 This is the pam_radius_auth module.
