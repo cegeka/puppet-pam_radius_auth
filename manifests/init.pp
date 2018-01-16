@@ -33,7 +33,11 @@ class pam_radius_auth (
 
   validate_array($pam_radius_servers_real)
   validate_re($pam_radius_secret_real, '^[~+._0-9a-zA-Z:-]+$')
-  validate_re($pam_radius_timeout_real, '^[0-9]+$')
+
+  if ! is_integer($pam_radius_timeout_real) {
+    fail("Pam_radius_auth[${name}]: pam_radius_timeout_real must be an integer")
+  }
+
   validate_re($pam_radius_enforce_real, '^permissive$|^strict$')
 
   # Distribution check
