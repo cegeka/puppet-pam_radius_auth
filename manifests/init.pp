@@ -42,23 +42,23 @@ class pam_radius_auth (
 
   # Distribution check
   case $::operatingsystem {
-    centos, redhat: {
+    'RedHat','CentOS': {
       # Vars that apply to all Enterprise Linux releases
       $pkg  = 'pam_radius'
       $conf = '/etc/pam_radius.conf'
 
       case $::operatingsystemmajrelease {
-        5: {
+        '5': {
           $supported     = true
           $pam_sshd_conf = 'pam_sshd_el5'
           $pam_sudo_conf = 'pam_sudo_el5'
         }
-        6: {
+        '6': {
           $supported     = true
           $pam_sshd_conf = 'pam_sshd_el6'
           $pam_sudo_conf = 'pam_sudo_el6'
         }
-        7: {
+        '7': {
           $supported     = true
           $pam_sshd_conf = 'pam_sshd_el7'
           $pam_sudo_conf = 'pam_sudo_el7'
@@ -69,7 +69,7 @@ class pam_radius_auth (
         }
       }
     }
-    ubuntu, debian: {
+    'Ubuntu', 'Debian': {
       # This module has been tested with Ubuntu 12.04 LTS.
       # Your experience may differ on older releases.
       $supported     = true
