@@ -122,12 +122,12 @@ class pam_radius_auth (
     $pam_radius_authorized.each |$instance,$usernames| {
       $userlist = $usernames
       file { "/etc/pam_admin_users_${instance}.conf" :
-	ensure  => $ensure,
-	owner   => 'root',
-	group   => 'root',
-	mode    => '0640',
-	content => template('pam_radius_auth/pam_admin_users.erb'),
-	require => [ Package[$pkg], File[$conf] ],
+        ensure  => $ensure,
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0640',
+        content => template('pam_radius_auth/pam_admin_users.erb'),
+        require => [ Package[$pkg], File[$conf] ],
       }
     }
 
