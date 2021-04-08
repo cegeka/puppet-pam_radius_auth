@@ -61,6 +61,11 @@ class pam_radius_auth (
           $pam_sshd_conf = 'pam_sshd_el7'
           $pam_sudo_conf = 'pam_sudo_el7'
         }
+        '8': {
+          $supported     = true
+          $pam_sshd_conf = 'pam_sshd_el8'
+          $pam_sudo_conf = 'pam_sudo_el8'
+        }
         default: {
           $supported = false
           notify { "pam_radius_auth module not supported on operating system release: ${::operatingsystemmajrelease}":}
