@@ -67,9 +67,7 @@ class pam_radius_auth (
           $pam_sudo_conf = 'pam_sudo_el8'
 
           # rhel8 also needs the sssd-client package to satisfy the dependency on /usr/lib64/security/pam_sss.so
-          package { 'sssd-client':
-            ensure  => $ensure,
-          }
+          ensure_resource('package','sssd-client',{'ensure'=>$ensure})
         }
         default: {
           $supported = false
