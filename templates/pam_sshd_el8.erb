@@ -24,4 +24,5 @@ session    required     pam_loginuid.so
 # pam_selinux.so open should only be followed by sessions to be executed in the user context
 session    required     pam_selinux.so open env_params
 session    optional     pam_keyinit.so force revoke
+session    optional     pam_motd.so
 session    include      password-auth
