@@ -30,7 +30,7 @@ class pam_radius_auth (
   $pam_radius_users_file_real = $pam_radius_users_file
 
   validate_array($pam_radius_servers_real)
-  validate_re($pam_radius_secret_real, '^[~+._0-9a-zA-Z:-]+$')
+  #validate_re($pam_radius_secret_real, '^[~+._0-9a-zA-Z:-]+$')
 
   if ! is_integer($pam_radius_timeout_real) {
     fail("Pam_radius_auth[${name}]: pam_radius_timeout_real must be an integer")
@@ -45,34 +45,12 @@ class pam_radius_auth (
       $pkg  = 'pam_radius'
       $conf = '/etc/pam_radius.conf'
 
-      case $::operatingsystemmajrelease {
-        '5': {
-          $supported     = true
-          $pam_sshd_conf = 'pam_sshd_el5'
-          $pam_sudo_conf = 'pam_sudo_el5'
-        }
-        '6': {
-          $supported     = true
-          $pam_sshd_conf = 'pam_sshd_el6'
-          $pam_sudo_conf = 'pam_sudo_el6'
-        }
-        '7': {
-          $supported     = true
-          $pam_sshd_conf = 'pam_sshd_el7'
-          $pam_sudo_conf = 'pam_sudo_el7'
-        }
-        '8': {
-          $supported     = true
-          $pam_sshd_conf = 'pam_sshd_el8'
-          $pam_sudo_conf = 'pam_sudo_el8'
+      $supported     = true
+      $pam_sshd_conf = 'pam_sshd'
+      $pam_sudo_conf = 'pam_sudo'
 
-          # rhel8 also needs the sssd-client package to satisfy the dependency on /usr/lib64/security/pam_sss.so
-          ensure_resource('package','sssd-client',{'ensure'=>$ensure})
-        }
-        default: {
-          $supported = false
-          notify { "pam_radius_auth module not supported on operating system release: ${::operatingsystemmajrelease}":}
-        }
+      if Integer($facts['os']['release']['major']) >= 8 {
+        ensure_resource('package','sssd-client',{'ensure'=>$ensure})
       }
     }
     'Ubuntu', 'Debian': {
