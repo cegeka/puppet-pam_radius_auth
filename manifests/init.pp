@@ -39,7 +39,7 @@ class pam_radius_auth (
   validate_re($pam_radius_enforce_real, '^permissive$|^strict$')
 
   # Distribution check
-  case $::operatingsystem {
+  case $facts['os']['name'] {
     'RedHat','CentOS': {
       # Vars that apply to all Enterprise Linux releases
       $pkg  = 'pam_radius'
@@ -64,7 +64,7 @@ class pam_radius_auth (
     }
     default: {
       $supported = false
-      notify { "pam_radius_auth module not supported on OS ${::operatingsystem}":}
+      notify { "pam_radius_auth module not supported on OS ${facts['os']['name']}":}
     }
   }
 
